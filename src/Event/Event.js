@@ -101,7 +101,8 @@ const Event = ({
           transform: translatedByDrag.getTranslateTransform(),
           borderWidth: event.borderWidth,
           borderRadius: 8,
-          borderColor: event.borderColor        },
+          borderColor: event.borderColor
+        },
         containerStyle,
       ]}
       /* eslint-disable react/jsx-props-no-spreading */
