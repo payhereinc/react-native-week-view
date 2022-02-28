@@ -70,8 +70,12 @@ export default class WeekView extends Component {
       setLocale(this.props.locale);
     }
     if (this.props.numberOfDays !== prevProps.numberOfDays) {
+      const currentMoment = moment(this.state.currentMoment)
+        .endOf('week')
+        .startOf('month')
+        .toDate();
       const initialDates = this.calculatePagesDates(
-        this.state.currentMoment,
+        currentMoment,
         this.props.numberOfDays,
         this.props.weekStartsOn,
         this.props.prependMostRecent,
@@ -320,7 +324,7 @@ export default class WeekView extends Component {
   ) => {
     const initialDates = [];
     const centralDate = moment(currentMoment);
-    if (numberOfDays === 7 || fixedHorizontally) {
+    if (numberOfDays !== 1 && (numberOfDays === 7 || fixedHorizontally)) {
       centralDate.subtract(
         // Ensure centralDate is before currentMoment
         (centralDate.day() + 7 - weekStartsOn) % 7,
