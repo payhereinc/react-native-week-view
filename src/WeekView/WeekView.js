@@ -72,18 +72,7 @@ export default class WeekView extends Component {
       setLocale(this.props.locale);
     }
     if (this.props.numberOfDays !== prevProps.numberOfDays) {
-      const prevMonth =
-        prevProps.numberOfDays === 7
-          ? moment(this.state.currentMoment).endOf('week').month()
-          : moment(this.state.currentMoment).month();
-      const currentMoment =
-        moment().month() !== prevMonth
-          ? moment(this.state.currentMoment)
-              .endOf('week')
-              .startOf('month')
-              .toDate()
-          : moment().toDate();
-
+      const currentMoment = moment(this.props.selectedDate);
       const initialDates = this.calculatePagesDates(
         currentMoment,
         this.props.numberOfDays,
@@ -220,7 +209,7 @@ export default class WeekView extends Component {
     };
 
     const newState = {};
-    let newStateCallback = () => {};
+    let newStateCallback = () => { };
     // The final target may change, if pages are added
     let targetIndex = target;
 
@@ -281,7 +270,7 @@ export default class WeekView extends Component {
       const newState = {
         currentMoment: newMoment,
       };
-      let newStateCallback = () => {};
+      let newStateCallback = () => { };
 
       if (movedPages < 0 && newPage < this.pageOffset) {
         this.prependPagesInPlace(initialDates, 1);
@@ -635,8 +624,8 @@ WeekView.defaultProps = {
   rightToLeft: false,
   prependMostRecent: false,
   RefreshComponent: ActivityIndicator,
-  onGetTargetDate: () => {},
-  onRefresh: () => {},
+  onGetTargetDate: () => { },
+  onRefresh: () => { },
   isRefreshing: false,
   insets: { top: 0, bottom: 0, left: 0, right: 0 },
 };
