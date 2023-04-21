@@ -1,21 +1,24 @@
 import { StyleSheet } from 'react-native';
+import { HEADER_HEIGHT } from '../utils/dimensions';
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  columns: {
     flex: 1,
     flexDirection: 'row',
+    height: HEADER_HEIGHT,
+    alignItems: 'stretch',
   },
   column: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderTopWidth: 1,
     borderLeftWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+  },
+  text: {
+    fontSize: 12,
+    color: 'black',
   },
 });
 

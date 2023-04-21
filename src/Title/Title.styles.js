@@ -4,8 +4,13 @@ const styles = StyleSheet.create({
   title: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 60,
-    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+  },
+  text: {
+    fontSize: 12,
+    textAlign: 'center',
+    color: 'black',
   },
 });
 

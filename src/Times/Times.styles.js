@@ -1,16 +1,17 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  columnContainer: {
+  container: {
+    // Matches CONTENT_TOP_PADDING but in Text size
     paddingTop: 10,
-    width: 60,
   },
   label: {
-    flex: -1,
+    flex: 0,
   },
   text: {
     fontSize: 12,
     textAlign: 'center',
+    color: 'black',
   },
 });
 
