@@ -189,8 +189,6 @@ class Events extends PureComponent {
       showNowLine,
       nowLineColor,
       onDragEvent,
-      // TODO: insets 사용하는지 확인하기
-      insets,
       onGridClick,
       onGridLongPress,
       dayWidth,
@@ -208,12 +206,6 @@ class Events extends PureComponent {
       numberOfDays,
       rightToLeft,
     );
-
-    // TODO: width 확인하기
-    const containerStyle = {
-      ...styles.container,
-      width: CONTAINER_WIDTH - insets?.left - insets?.right,
-    };
 
     return (
       <View style={[styles.container, { width: pageWidth }]}>
@@ -291,7 +283,6 @@ Events.propTypes = {
   nowLineColor: PropTypes.string,
   beginAgendaAt: PropTypes.number,
   onDragEvent: PropTypes.func,
-  insets: PropTypes.object.isRequired,
   pageWidth: PropTypes.number.isRequired,
   dayWidth: PropTypes.number.isRequired,
   verticalResolution: PropTypes.number.isRequired,

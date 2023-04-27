@@ -25,7 +25,7 @@ import {
   DATE_STR_FORMAT,
   availableNumberOfDays,
   setLocale,
-  getFormattedDate
+  getFormattedDate,
 } from '../utils/dates';
 import { mod } from '../utils/misc';
 import {
@@ -172,7 +172,7 @@ export default class WeekView extends Component {
     ) {
       requestAnimationFrame(() => {
         this.scrollToVerticalStart();
-      })
+      });
     }
     if (this.state.windowWidth !== prevState.windowWidth) {
       // NOTE: after a width change, the position may be off by a few days
@@ -193,7 +193,17 @@ export default class WeekView extends Component {
   calculateTimes = memoizeOne(calculateTimesArray);
 
   scrollToVerticalStart = () => {
-    this.scrollToTime(this.props.startHour * 60, { animated: false });
+    const isToday =
+      moment().isSame(this.props.selectedDate, 'date') ||
+      moment().isBetween(
+        this.props.selectedDate,
+        moment(this.props.selectedDate).add(this.props.numberOfDays, 'days'),
+        undefined,
+        '[)',
+      );
+    const targetHour = isToday ? moment().hour() : this.props.startHour();
+
+    this.scrollToTime(targetHour * 60, { animated: false });
   };
 
   scrollToTime = (minutes, options = {}) => {
@@ -430,7 +440,7 @@ export default class WeekView extends Component {
       targetDayOffset || 0,
     );
 
-    const { animated = true } = options || {};
+    const { animated = false } = options || {};
 
     this.setState(newState, () =>
       // setTimeout is used to force calling scroll after UI is updated
@@ -482,7 +492,7 @@ export default class WeekView extends Component {
       const newState = {
         currentMoment: newMoment,
       };
-      let newStateCallback = () => { };
+      let newStateCallback = () => {};
 
       const buffer = PAGES_OFFSET;
       const pagesToStartOfList = newPageIndex;
@@ -546,11 +556,10 @@ export default class WeekView extends Component {
   bucketEventsByDate = memoizeOne(bucketEventsByDate);
 
   getListItemLayout = (item, index) => {
-    const { insets } = this.props;
     const pageWidth = this.dimensions.pageWidth || 0;
     return {
-      length: pageWidth - insets?.left - insets?.right,
-      offset: (pageWidth - insets?.left - insets?.right) * index,
+      length: pageWidth,
+      offset: pageWidth * index,
       index,
     };
   };
@@ -559,7 +568,6 @@ export default class WeekView extends Component {
     const { currentMoment } = this.state;
     return getFormattedDate(currentMoment, DATE_STR_FORMAT);
   };
-
 
   render() {
     const {
@@ -629,16 +637,6 @@ export default class WeekView extends Component {
     const horizontalInverted =
       (prependMostRecent && !rightToLeft) ||
       (!prependMostRecent && rightToLeft);
-    const calendarHeaderStyle = {
-      width: CONTAINER_WIDTH - insets?.left - insets?.right,
-    };
-    const calendarDayHeaderStyle = {
-      width: CONTAINER_WIDTH - insets?.left - insets?.right,
-    };
-    const loadingSpinnerStyle = {
-      ...styles.loadingSpinner,
-      right: (CONTAINER_WIDTH - insets?.left - insets?.right) / 2,
-    };
 
     onGetTargetDate(this.getTargetDate());
 
@@ -647,7 +645,7 @@ export default class WeekView extends Component {
       dayWidth,
       timeLabelsWidth,
     } = computeHorizontalDimensions(
-      windowWidth,
+      windowWidth - insets?.left - insets?.right,
       numberOfDays,
       timesColumnWidth,
     );
@@ -789,7 +787,6 @@ export default class WeekView extends Component {
                       editingEventId={editingEvent}
                       editEventConfig={editEventConfig}
                       dragEventConfig={dragEventConfig}
-                      insets={insets}
                     />
                   );
                 }}
@@ -867,7 +864,6 @@ WeekView.propTypes = {
   EventComponent: PropTypes.elementType,
   DayHeaderComponent: PropTypes.elementType,
   TodayHeaderComponent: PropTypes.elementType,
-  DayHeaderComponent: PropTypes.elementType,
   showTitle: PropTypes.bool,
   rightToLeft: PropTypes.bool,
   fixedHorizontally: PropTypes.bool,

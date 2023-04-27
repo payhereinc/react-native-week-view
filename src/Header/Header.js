@@ -28,7 +28,7 @@ const Column = ({
   const isToday = moment().isSame(column, 'days');
 
   const ComponentChosen =
-    DayComponent || (isToday && TodayComponent) || DefaultDayComponent;
+    (isToday && TodayComponent) || DayComponent || DefaultDayComponent;
 
   return (
     <TouchableOpacity
