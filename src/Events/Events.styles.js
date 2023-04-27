@@ -1,23 +1,17 @@
 import { StyleSheet } from 'react-native';
-import { CONTAINER_WIDTH, CONTENT_OFFSET } from '../utils';
+import { CONTENT_TOP_PADDING } from '../utils/dimensions';
 
 const GREY_COLOR = '#E9EDF0';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: CONTENT_OFFSET,
-    width: CONTAINER_WIDTH,
+    paddingTop: CONTENT_TOP_PADDING,
   },
   timeRow: {
-    flex: 0,
-  },
-  timeLabelLine: {
-    height: 1,
-    backgroundColor: GREY_COLOR,
-    position: 'absolute',
-    right: 0,
-    left: 0,
+    borderTopWidth: 1,
+    borderColor: GREY_COLOR,
+    backgroundColor: 'transparent',
   },
   eventsColumn: {
     flex: 1,

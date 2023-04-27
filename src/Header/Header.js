@@ -1,80 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 
 import {
   getFormattedDate,
   calculateDaysArray,
   availableNumberOfDays,
-} from '../utils';
+} from '../utils/dates';
 import styles from './Header.styles';
 
-const getDayTextStyles = (numberOfDays) => {
-  const fontSize = numberOfDays === 7 ? 12 : 14;
-  return {
-    fontSize,
-  };
-};
+const DefaultDayComponent = ({ textStyle, formattedDate }) => (
+  <Text style={[styles.text, textStyle]}>{formattedDate}</Text>
+);
 
 const Column = ({
   column,
-  numberOfDays,
   format,
   style,
   textStyle,
-  TodayComponent,
   DayComponent,
+  TodayComponent,
+  onDayPress,
+  width,
 }) => {
   const formattedDate = getFormattedDate(column, format);
-  const useTodayComponent = TodayComponent && moment().isSame(column, 'days');
-  const fullTextStyle = [getDayTextStyles(numberOfDays), textStyle];
+  const isToday = moment().isSame(column, 'days');
+
+  const ComponentChosen =
+    (isToday && TodayComponent) || DayComponent || DefaultDayComponent;
 
   return (
-    <View style={[styles.column, style]}>
-      {useTodayComponent ? (
-        <TodayComponent
-          date={column}
-          formattedDate={formattedDate}
-          textStyle={fullTextStyle}
-        />
-      ) : (
-        <DayComponent
-          date={column}
-          formattedDate={formattedDate}
-          textStyle={fullTextStyle}
-        />
-      )}
-    </View>
-  );
-};
-
-const Columns = ({
-  columns,
-  numberOfDays,
-  format,
-  style,
-  textStyle,
-  TodayComponent,
-  DayComponent,
-}) => {
-  return (
-    <View style={styles.columns}>
-      {columns.map((column) => {
-        return (
-          <Column
-            style={style}
-            textStyle={textStyle}
-            key={column}
-            column={column}
-            numberOfDays={numberOfDays}
-            format={format}
-            TodayComponent={TodayComponent}
-            DayComponent={DayComponent}
-          />
-        );
-      })}
-    </View>
+    <TouchableOpacity
+      style={[styles.column, style, { width }]}
+      onPress={() => onDayPress && onDayPress(column, formattedDate)}
+      disabled={!onDayPress}
+    >
+      <ComponentChosen
+        date={column}
+        formattedDate={formattedDate}
+        textStyle={textStyle}
+        isToday={isToday}
+      />
+    </TouchableOpacity>
   );
 };
 
@@ -87,21 +55,26 @@ const WeekViewHeader = ({
   TodayComponent,
   DayComponent,
   rightToLeft,
+  onDayPress,
+  dayWidth,
 }) => {
-  const columns = calculateDaysArray(initialDate, numberOfDays, rightToLeft);
+  const columns =
+    calculateDaysArray(initialDate, numberOfDays, rightToLeft) || [];
   return (
     <View style={styles.container}>
-      {columns && (
-        <Columns
-          format={formatDate}
-          columns={columns}
-          numberOfDays={numberOfDays}
+      {columns.map((column) => (
+        <Column
           style={style}
           textStyle={textStyle}
-          TodayComponent={TodayComponent}
+          key={column}
+          column={column}
+          format={formatDate}
           DayComponent={DayComponent}
+          TodayComponent={TodayComponent}
+          onDayPress={onDayPress}
+          width={dayWidth}
         />
-      )}
+      ))}
     </View>
   );
 };
@@ -113,8 +86,10 @@ WeekViewHeader.propTypes = {
   style: PropTypes.object,
   textStyle: PropTypes.object,
   rightToLeft: PropTypes.bool,
-  TodayComponent: PropTypes.elementType,
   DayComponent: PropTypes.elementType,
+  TodayComponent: PropTypes.elementType,
+  onDayPress: PropTypes.func,
+  dayWidth: PropTypes.number.isRequired,
 };
 
 WeekViewHeader.defaultProps = {
