@@ -201,7 +201,7 @@ export default class WeekView extends Component {
         undefined,
         '[)',
       );
-    const targetHour = isToday ? moment().hour() : this.props.startHour();
+    const targetHour = isToday ? moment().hour() : this.props.startHour;
 
     this.scrollToTime(targetHour * 60, { animated: false });
   };
