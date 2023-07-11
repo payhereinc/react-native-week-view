@@ -122,6 +122,12 @@ export default class WeekView extends Component {
         this.setState({ windowWidth, windowHeight });
       },
     );
+
+    const { currentMoment } = this.state;
+    const { onGetTargetDate } = this.props;
+    const targetDate = getFormattedDate(currentMoment, DATE_STR_FORMAT);
+
+    onGetTargetDate(targetDate);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -180,6 +186,13 @@ export default class WeekView extends Component {
         index: this.currentPageIndex,
         animated: false,
       });
+    }
+    if (this.state.currentMoment !== prevState.currentMoment) {
+      const { currentMoment } = this.state;
+      const { onGetTargetDate } = this.props;
+      const targetDate = getFormattedDate(currentMoment, DATE_STR_FORMAT);
+
+      onGetTargetDate(targetDate);
     }
   }
 
@@ -564,11 +577,6 @@ export default class WeekView extends Component {
     };
   };
 
-  getTargetDate = () => {
-    const { currentMoment } = this.state;
-    return getFormattedDate(currentMoment, DATE_STR_FORMAT);
-  };
-
   render() {
     const {
       showTitle,
@@ -610,7 +618,6 @@ export default class WeekView extends Component {
       onDayPress,
       isRefreshing,
       RefreshComponent,
-      onGetTargetDate,
       insets,
       onRefresh,
       windowSize,
@@ -637,8 +644,6 @@ export default class WeekView extends Component {
     const horizontalInverted =
       (prependMostRecent && !rightToLeft) ||
       (!prependMostRecent && rightToLeft);
-
-    onGetTargetDate(this.getTargetDate());
 
     const {
       pageWidth,
